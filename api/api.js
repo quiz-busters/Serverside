@@ -14,7 +14,7 @@ api.get('/leaderboard', userController.findAll)
 
 
 // Unauthorised routes
-api.get('/', (req, res) => {res.json({message: 'Welcome to Habit Harbour'})})
+api.get('/', (req, res) => {res.json({message: 'Welcome to Quiz Time'})})
 
 
 
