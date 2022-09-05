@@ -8,14 +8,24 @@ require('dotenv').config()
 
 api.use(cors())
 api.use(express.json())
-api.use(express.urlencoded({extended: false}))
+// api.use(express.urlencoded({ extended: false }))
 
-api.get('/leaderboard', userController.findAll)
+api.post('/create', userController.createUser)
+
+// LOGIN FUNCTION NEEDED
+// api.post('/login', LOGIN FUNCTION HERE)
+
+// INCREMENT SCORE FUNCTION NEEDED
+api.post('/:username/score', userController.incrementScore)
 
 
-// Unauthorised routes
-api.get('/', (req, res) => {res.json({message: 'Welcome to Quiz Time'})})
+api.get('/users', userController.findAll)
 
+// FUNCTION NEEDED FOR HIGHSCORES ENSURE HIGHEST TO LOWEST
+// api.get('Leaderboard', LEADERBOARD FUNCTION)
+
+
+api.get('/', (req, res) => { res.json({ message: 'Welcome to Quiz Time' }) })
 
 
 module.exports = api;

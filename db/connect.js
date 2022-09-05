@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 
 async function connectDB(url) {
    
-    const success =  await mongoose
+    const connected =  await mongoose
     .connect(url, {
         useNewUrlParser: true,
         useCreateIndex: true,
         useFindAndModify: false,
         useUnifiedTopology: true,
     })
-   return success;
+   return connected;
 }
 
 module.exports = connectDB
