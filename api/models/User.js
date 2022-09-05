@@ -11,6 +11,13 @@ const UserSchema = new mongoose.Schema({
     score: {
         type: Number,
         default: 0
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    image: {
+        type: String
     }
 })
 
