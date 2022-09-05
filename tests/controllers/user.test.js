@@ -29,6 +29,12 @@ describe('User controllers', () => {
             expect(res.status).toBe(200)
         })
     })
+    
+    it('Recieves status code 200 for /leaderboard route', () => {
+        supertest(api).get('/leaderboar').expect((res) => {
+            expect(res.status).toBe(200)
+        })
+    })
 
     it('it increments score', async () => {
         const response = await supertest(api).post('/nasim/score')
