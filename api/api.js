@@ -15,7 +15,7 @@ api.post('/create', userController.createUser)
 // REGISTER FUNCTION
 api.post("/register", userController.register)
 
-// LOGIN FUNCTION NEEDED
+// LOGIN FUNCTION 
 api.post('/login', userController.login)
 
 // INCREMENT SCORE FUNCTION NEEDED
@@ -24,8 +24,10 @@ api.post('/:username/score', userController.incrementScore)
 
 api.get('/users', userController.findAll)
 
-// FUNCTION NEEDED FOR HIGHSCORES ENSURE HIGHEST TO LOWEST
-// api.get('Leaderboard', LEADERBOARD FUNCTION)
+//Find the current user
+api.get("/currentUser", userController.currentUser)
+
+//LEADERBOARD FUNCTION
 api.get('/leaderboard', userController.findAllByScore)
 
 

@@ -96,11 +96,26 @@ const findAllByScore = async (req, res) => {
     }
 }
 
+const currentUser = async (req, res) => {
+    try {
+        const token = req.get("Authorization");
+        const data = jwt.verify(token, "secret");
+        if (!data) {
+            return res.status(424).json("Invalid token");
+        }
+        const user = await User.findById(data.userId);
+        res.json(user);
+    } catch (error) {
+        res.status(424).json(errorHandler(error));
+    }
+}
+
 module.exports = {
     findAll,
     createUser,
     incrementScore,
     findAllByScore,
     login,
-    register
+    register,
+    currentUser
 }

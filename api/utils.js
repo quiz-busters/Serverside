@@ -1,3 +1,6 @@
 exports.errorHandler = (error) => {
-    return Object.values(error.errors)[0].message;
+    if (error.errors) {
+        return  Object?.values(error?.errors)[0]?.message;
+    }
+    return  error.message;
 }
