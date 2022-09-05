@@ -10,8 +10,6 @@ api.use(cors())
 api.use(express.json())
 // api.use(express.urlencoded({ extended: false }))
 
-api.post('/create', userController.createUser)
-
 // REGISTER FUNCTION
 api.post("/register", userController.register)
 

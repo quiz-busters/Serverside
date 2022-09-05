@@ -3,45 +3,50 @@ const User = require('../models/User');
 const { errorHandler } = require("../utils");
 const jwt = require("jsonwebtoken");
 
+const { getHash, compareHash } = require('../middleware/hash')
+const {createToken} = require('../middleware/createToken')
+
+
 const register = async (req, res) => {
 
-    const {username, email, password, image} = req.body
-    const exists = await User.findOne({email});
-
-    if (exists) {
-        return res.status(424).json({error: "Email already exists"})
-    }
     try {
-        const user = new User({
-            username, email, password, image
-        })
-        await user.save();
-        const token = jwt.sign({userId: user._id}, "secret", {expiresIn: "1d"});
-        res.json({user, token})
-    } catch (error) {
-        res.status(424).json(errorHandler(error));
+        const username = req.body.username
+        const email = req.body.email
+        const hashedPassword = await getHash(req.body.password)
+        const user = await User.create({ 'email': email, 'username': username, 'password' : hashedPassword})  
+        res.status(201).json({username: username,  message: 'User created'})                
+    } catch (error) {                       
+        res.status(500).json({message: error})
     }
-    
 
 }
-
+    
 const login = async (req, res) => {
 
-    const {email, password} = req.body
-    const exists = await User.findOne({email});
-
-    if (!exists) {
-        return res.status(424).json({error: "Invalid email"})
-    }
-    if (exists.password != password) {
-        return res.status(424).json({error: "Invalid password"})
-    }
     try {
-        const token = jwt.sign({userId: exists._id}, "secret", {expiresIn: "1d"});
-        res.json({user: exists, token})
-    } catch (error) {
-        res.status(424).json(errorHandler(error));
+        const username = req.body.username
+        const currentUser = await User.find({"username" : username})
+
+        let authenticated = await compareHash(req.body.password, currentUser[0]['password'])
+        if(authenticated) {
+        
+            res.json({
+                success: true,
+                message: 'Successfully logged in',
+                token: 'Bearer ' + await createToken(currentUser)
+            })
+        } else {
+            throw 'Wrong credentials'
+        }
+       
+    } catch (error) {   
+        console.log('Cannot authorise: ', error)                    
+        res.status(401).json({
+            success: false,
+            message: error
+        })
     }
+
 }
 
 const findAll = async (req, res) => {
@@ -54,18 +59,6 @@ const findAll = async (req, res) => {
     }
 }
 
-const createUser = async (req, res) => {
-
-    try {
-        const username = req.body.username
-        const account = await User.create({ 'username': username, })
-        res.status(201).json({ username: username, message: 'User created' })
-
-    } catch (error) {
-        res.status(500).json({ message: error })
-    }
-
-}
 
 const incrementScore = async (req, res) => {
 
@@ -112,7 +105,6 @@ const currentUser = async (req, res) => {
 
 module.exports = {
     findAll,
-    createUser,
     incrementScore,
     findAllByScore,
     login,
