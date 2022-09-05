@@ -23,6 +23,7 @@ api.get('/users', userController.findAll)
 
 // FUNCTION NEEDED FOR HIGHSCORES ENSURE HIGHEST TO LOWEST
 // api.get('Leaderboard', LEADERBOARD FUNCTION)
+api.get('/leaderboard', userController.findAllByScore)
 
 
 api.get('/', (req, res) => { res.json({ message: 'Welcome to Quiz Time' }) })

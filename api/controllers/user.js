@@ -31,8 +31,19 @@ const incrementScore = async (req, res) => {
         res.status(500).json({ error: error })
     }
 }
+const findAllByScore = async (req, res) => {
+    try {
+        const users = await User.find();
+        users.sort((a, b) => b.score - a.score)
+        res.status(200).json({users});
+    } catch (error) {
+        res.status(404).json({ message: error })
+    }
+}
+
 module.exports = {
     findAll,
     createUser,
-    incrementScore
+    incrementScore,
+    findAllByScore
 }
