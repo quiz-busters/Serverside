@@ -12,8 +12,11 @@ api.use(express.json())
 
 api.post('/create', userController.createUser)
 
+// REGISTER FUNCTION
+api.post("/register", userController.register)
+
 // LOGIN FUNCTION NEEDED
-// api.post('/login', LOGIN FUNCTION HERE)
+api.post('/login', userController.login)
 
 // INCREMENT SCORE FUNCTION NEEDED
 api.post('/:username/score', userController.incrementScore)

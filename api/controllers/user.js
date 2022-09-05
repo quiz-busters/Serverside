@@ -1,4 +1,49 @@
-const User = require('../models/User')
+const { response } = require("express");
+const User = require('../models/User');
+const { errorHandler } = require("../utils");
+const jwt = require("jsonwebtoken");
+
+const register = async (req, res) => {
+
+    const {username, email, password, image} = req.body
+    const exists = await User.findOne({email});
+
+    if (exists) {
+        return res.status(424).json({error: "Email already exists"})
+    }
+    try {
+        const user = new User({
+            username, email, password, image
+        })
+        await user.save();
+        const token = jwt.sign({userId: user._id}, "secret", {expiresIn: "1d"});
+        res.json({user, token})
+    } catch (error) {
+        res.status(424).json(errorHandler(error));
+    }
+    
+
+}
+
+const login = async (req, res) => {
+
+    const {email, password} = req.body
+    const exists = await User.findOne({email});
+
+    if (!exists) {
+        return res.status(424).json({error: "Invalid email"})
+    }
+    if (exists.password != password) {
+        return res.status(424).json({error: "Invalid password"})
+    }
+    try {
+        const token = jwt.sign({userId: exists._id}, "secret", {expiresIn: "1d"});
+        res.json({user: exists, token})
+    } catch (error) {
+        res.status(424).json(errorHandler(error));
+    }
+}
+
 const findAll = async (req, res) => {
     try {
         const users = await User.find({});
@@ -27,11 +72,11 @@ const incrementScore = async (req, res) => {
     try {
         const user = await User.findOne({ "username": req.params.username });
 
-        if (req.body.score == 0) {
-            res.send({ message: "Score is 0 - Do better next time" })
-        } else {
+        if (req.body.score !== 0) {
             user.score += req.body.score
             res.json({ user: user.username, score: user.score, message: "Score updated" })
+        } else {
+            res.send({ message: "Score is 0 - Do better next time" })
         }
         await user.save()
 
@@ -55,5 +100,7 @@ module.exports = {
     findAll,
     createUser,
     incrementScore,
-    findAllByScore
+    findAllByScore,
+    login,
+    register
 }
