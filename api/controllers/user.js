@@ -92,11 +92,12 @@ const findAllByScore = async (req, res) => {
 const currentUser = async (req, res) => {
     try {
         const token = req.get("Authorization");
-        const data = jwt.verify(token, "secret");
+        const data = jwt.verify(token, process.env['SECRET_PASSWORD']);
         if (!data) {
             return res.status(424).json("Invalid token");
         }
         const user = await User.findById(data.userId);
+        console.log(user)
         res.json(user);
     } catch (error) {
         res.status(424).json(errorHandler(error));
