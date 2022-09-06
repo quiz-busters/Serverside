@@ -8,7 +8,6 @@ const {createToken} = require('../middleware/createToken')
 
 
 const register = async (req, res) => {
-
     try {
         const username = req.body.username
         const email = req.body.email
@@ -33,7 +32,8 @@ const login = async (req, res) => {
             res.json({
                 success: true,
                 message: 'Successfully logged in',
-                token: 'Bearer ' + await createToken(currentUser)
+                token: 'Bearer ' + await createToken(currentUser),
+                username: username
             })
         } else {
             throw 'Wrong credentials'
