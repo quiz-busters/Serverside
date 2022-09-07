@@ -6,6 +6,16 @@ const jwt = require("jsonwebtoken");
 const { getHash, compareHash } = require('../middleware/hash')
 const {createToken} = require('../middleware/createToken')
 
+const createUser = async (req, res) => {
+    try {
+        const username = req.body.username
+        const hashedPassword = await getHash(req.body.username)
+        const user = await User.create({ 'username': username, 'email': `${username}@quiztime.com`, 'password': hashedPassword })
+        res.status(201).json({usernmae: username, message: "Player 2 created"})
+    } catch {
+        res.status(500).json({message: error})
+    }
+}
 
 const register = async (req, res) => {
     try {
@@ -30,10 +40,10 @@ const login = async (req, res) => {
         if(authenticated) {
         
             res.json({
+                username: username,
                 success: true,
                 message: 'Successfully logged in',
-                token: 'Bearer ' + await createToken(currentUser),
-                username: username
+                token: 'Bearer ' + await createToken(currentUser)
             })
         } else {
             throw 'Wrong credentials'
@@ -110,5 +120,6 @@ module.exports = {
     findAllByScore,
     login,
     register,
-    currentUser
+    currentUser,
+    createUser
 }

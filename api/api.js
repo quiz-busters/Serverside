@@ -31,5 +31,6 @@ api.get('/leaderboard', userController.findAllByScore)
 
 api.get('/', (req, res) => { res.json({ message: 'Welcome to Quiz Time' }) })
 
+api.post('/createuser', userController.createUser)
 
 module.exports = api;

@@ -60,7 +60,7 @@ describe('User controllers', () => {
     })
 
     it('Cant find a score for an invalid user', async () => {
-        const response = await supertest(api).post('/ndakjnbfqani/score')
+        const response = await supertest(api).post(`/${undefined}/score`)
             .send({
                 "score": 10
             })
