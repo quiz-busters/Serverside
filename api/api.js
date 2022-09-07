@@ -25,6 +25,8 @@ api.get('/users', userController.findAll)
 //Find the current user
 api.get("/currentUser", userController.currentUser)
 
+api.get("/users/:username", userController.getUser)
+
 //LEADERBOARD FUNCTION
 api.get('/leaderboard', userController.findAllByScore)
 

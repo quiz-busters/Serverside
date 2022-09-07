@@ -11,7 +11,7 @@ const createUser = async (req, res) => {
         const username = req.body.username
         const hashedPassword = await getHash(req.body.username)
         const user = await User.create({ 'username': username, 'email': `${username}@quiztime.com`, 'password': hashedPassword })
-        res.status(201).json({usernmae: username, message: "Player 2 created"})
+        res.status(201).json({username: username, message: "Player 2 created"})
     } catch {
         res.status(500).json({message: error})
     }
@@ -22,8 +22,8 @@ const register = async (req, res) => {
         const username = req.body.username
         const email = req.body.email
         const hashedPassword = await getHash(req.body.password)
-        const user = await User.create({ 'email': email, 'username': username, 'password' : hashedPassword})  
-        res.status(201).json({username: username,  message: 'User created'})                
+        const user = await User.create({ 'email': email, 'username': username, 'password' : hashedPassword, image: req.body.image || null})  
+        res.status(201).json({user: user,  message: 'User created'})                
     } catch (error) {                       
         res.status(500).json({message: error})
     }
@@ -61,7 +61,7 @@ const login = async (req, res) => {
 
 const findAll = async (req, res) => {
     try {
-        const users = await User.find({});
+        const users = await User.find({}).sort({score:-1})
         res.status(200).json({ users })
 
     } catch (error) {
@@ -76,7 +76,7 @@ const incrementScore = async (req, res) => {
         const user = await User.findOne({ "username": req.params.username });
 
         if (req.body.score !== 0) {
-            user.score += req.body.score
+            user.score = req.body.score
             res.json({ user: user.username, score: user.score, message: "Score updated" })
         } else {
             res.send({ message: "Score is 0 - Do better next time" })
@@ -89,6 +89,20 @@ const incrementScore = async (req, res) => {
     }
 
 }
+
+const getUser = async (req, res) => {
+
+    try {
+        const user = await User.findOne({ "username": req.params.username });
+        res.json(user);
+
+    } catch (error) {
+        console.log('Cannot find this user')
+        res.status(500).json({ error: error })
+    }
+
+}
+
 const findAllByScore = async (req, res) => {
     try {
         const users = await User.find();
@@ -121,5 +135,6 @@ module.exports = {
     login,
     register,
     currentUser,
-    createUser
+    createUser,
+    getUser
 }
