@@ -76,7 +76,7 @@ const incrementScore = async (req, res) => {
         const user = await User.findOne({ "username": req.params.username });
 
         if (req.body.score !== 0) {
-            user.score = req.body.score
+            user.score += req.body.score
             res.json({ user: user.username, score: user.score, message: "Score updated" })
         } else {
             res.send({ message: "Score is 0 - Do better next time" })
