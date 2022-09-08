@@ -10,9 +10,11 @@ const createUser = async (req, res) => {
     try {
         const username = req.body.username
         const hashedPassword = await getHash(req.body.username)
-        const user = await User.create({ 'username': username, 'email': `${username}@quiztime.com`, 'password': hashedPassword })
-        res.status(201).json({username: username, message: "Player 2 created"})
-    } catch {
+        const user = await User.create({ 'username': username, 'email': `${username}
+        @quiztime.com`, 'password': hashedPassword })
+        res.status(201).json({user: user, message: "Player 2 created"})
+    } catch (error) {
+        console.log(error)
         res.status(500).json({message: error})
     }
 }
@@ -43,7 +45,8 @@ const login = async (req, res) => {
                 username: username,
                 success: true,
                 message: 'Successfully logged in',
-                token: 'Bearer ' + await createToken(currentUser)
+                token: 'Bearer ' + await createToken(currentUser),
+                user: currentUser[0]
             })
         } else {
             throw 'Wrong credentials'
