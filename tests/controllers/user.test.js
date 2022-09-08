@@ -104,7 +104,7 @@ describe('User controllers', () => {
             })
             .set('Accept', 'application/json');
 
-        expect(response.body.username).toBeDefined();
+        expect(response.body.user).toBeDefined();
         expect(response.body.message).toBeDefined();
         expect(response.statusCode).toEqual(201)
     })
